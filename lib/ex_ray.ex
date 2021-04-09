@@ -1,18 +1,115 @@
 defmodule ExRay do
-  @moduledoc """
-  Documentation for `ExRay`.
+  @doc """
+  Returns a 4-ple with a final element 1.0 representing a point
+
+    iex> ExRay.point(1, 2, 3)
+    {1, 2, 3, 1}
   """
+  def point(x, y, z) do
+    {x, y, z, 1}
+  end
 
   @doc """
-  Hello world.
+  Returns a 4-ple with a final element 1.0 representing a vector
 
-  ## Examples
+    iex> ExRay.vector(1, 2, 3)
+    {1, 2, 3, 0}
+  """
+  def vector(x, y, z) do
+    {x, y, z, 0}
+  end
 
-      iex> ExRay.hello()
-      :world
+  @doc """
+  Adds two tuples together
+
+    iex> a = ExRay.point(3, -2, 5)
+    iex> b = ExRay.vector(-2, 3, 1)
+    iex> ExRay.add(a, b)
+    {1, 1, 6, 1}
 
   """
-  def hello do
-    :world
+  def add({x1, y1, z1, w1}, {x2, y2, z2, w2}) do
+    {
+      x1 + x2,
+      y1 + y2,
+      z1 + z2,
+      w1 + w2
+    }
+  end
+
+  @doc """
+  Subtracts one tuple from another
+
+    iex> a = ExRay.point(3, 2, 1)
+    iex> b = ExRay.point(5, 6, 7)
+    iex> ExRay.subtract(a, b)
+    {-2, -4, -6, 0}
+
+  """
+  def subtract({x1, y1, z1, w1}, {x2, y2, z2, w2}) do
+    {
+      x1 - x2,
+      y1 - y2,
+      z1 - z2,
+      w1 - w2
+    }
+  end
+
+  @doc """
+  Can multiply a tuple by a scalar
+
+    iex> a = ExRay.vector(1, -2, 3)
+    iex> ExRay.multiply(a, 3.5)
+    {3.5, -7.0, 10.5, 0.0}
+
+  """
+  def multiply({x, y, z, w}, s) when is_number(s) do
+    {x * s, y * s, z * s, w * s}
+  end
+
+  @doc """
+  Can divide a tuple by a scalar
+
+    iex> a = ExRay.vector(1, -2, 3)
+    iex> ExRay.divide(a, 2)
+    {0.5, -1.0, 1.5, 0.0}
+
+  """
+  def divide({x, y, z, w}, s) when is_number(s) do
+    {x / s, y / s, z / s, w / s}
+  end
+
+  @doc """
+  Negates a tuple by element
+
+    iex> a = {1, 2, 3, -4}
+    iex> ExRay.negate(a)
+    {-1, -2, -3, 4}
+
+  """
+  def negate({x, y, z, w}) do
+    {-x, -y, -z, -w}
+  end
+
+  def magnitude({x, y, z, w}) do
+    :math.sqrt(x * x + y * y + z * z + w * w)
+  end
+
+  def normalize({x, y, z, w} = t) do
+    with mag <- magnitude(t) do
+      {x / mag, y / mag, z / mag, w / mag}
+    end
+  end
+
+  def dot({x1, y1, z1, w1}, {x2, y2, z2, w2}) do
+    x1 * x2 + y1 * y2 + z1 * z2 + w1 * w2
+  end
+
+  def cross({x1, y1, z1, _}, {x2, y2, z2, _}) do
+    vector(
+      y1 * z2 - z1 * y2,
+      z1 * x2 - x1 * z2,
+      x1 * y2 - y1 * x2
+    )
   end
 end
