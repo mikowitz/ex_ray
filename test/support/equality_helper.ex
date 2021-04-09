@@ -6,7 +6,9 @@ defmodule EqualityHelper do
       import Kernel, except: [==: 2]
 
       def a == b when is_list(a) and is_list(b) do
-        assert Enum.zip(a, b) |> Enum.all?(fn {a, b} -> abs(a - b) < @epsilon end)
+        a = List.flatten(a)
+        b = List.flatten(b)
+        Enum.zip(a, b) |> Enum.all?(fn {x, y} -> abs(x - y) < @epsilon end)
       end
 
       def a == b do

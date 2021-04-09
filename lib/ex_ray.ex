@@ -28,6 +28,8 @@ defmodule ExRay do
   """
   def color(r, g, b), do: [r, g, b]
 
+  defdelegate matrix(m), to: ExRay.Matrix, as: :new
+
   @doc """
   Adds two tuples together
 
@@ -96,6 +98,8 @@ defmodule ExRay do
     [r1 * r2, g1 * g2, b1 * b2]
   end
 
+  def multiply(m1, m2), do: ExRay.Matrix.multiply(m1, m2)
+
   @doc """
   Can divide a tuple by a scalar
 
@@ -132,6 +136,14 @@ defmodule ExRay do
 
   def dot([x1, y1, z1, w1], [x2, y2, z2, w2]) do
     x1 * x2 + y1 * y2 + z1 * z2 + w1 * w2
+  end
+
+  def dot([x1, y1, z1], [x2, y2, z2]) do
+    x1 * x2 + y1 * y2 + z1 * z2
+  end
+
+  def dot([x1, y1], [x2, y2]) do
+    x1 * x2 + y1 * y2
   end
 
   def cross([x1, y1, z1, _], [x2, y2, z2, _]) do
