@@ -79,4 +79,33 @@ defmodule ExRayTest do
       assert cross(b, a) == vector(1, -2, 1)
     end
   end
+
+  describe "operations on colors" do
+    test "addition" do
+      c1 = color(0.9, 0.6, 0.75)
+      c2 = color(0.7, 0.1, 0.25)
+
+      assert add(c1, c2) == color(1.6, 0.7, 1.0)
+    end
+
+    test "subtraction" do
+      c1 = color(0.9, 0.6, 0.75)
+      c2 = color(0.7, 0.1, 0.25)
+
+      assert subtract(c1, c2) == color(0.2, 0.5, 0.5)
+    end
+
+    test "multiplying by a scalar" do
+      color = color(0.2, 0.3, 0.4)
+
+      assert multiply(color, 2) == color(0.4, 0.6, 0.8)
+    end
+
+    test "hadamard product" do
+      c1 = color(1, 0.2, 0.4)
+      c2 = color(0.9, 1, 0.1)
+
+      assert multiply(c1, c2) == color(0.9, 0.2, 0.04)
+    end
+  end
 end
