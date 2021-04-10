@@ -29,6 +29,10 @@ defmodule ExRay do
   def color(r, g, b), do: [r, g, b]
 
   defdelegate matrix(m), to: ExRay.Matrix, as: :new
+  defdelegate ray(o, d), to: ExRay.Ray, as: :new
+  defdelegate sphere(), to: ExRay.Sphere, as: :new
+
+  def origin, do: point(0, 0, 0)
 
   @doc """
   Adds two tuples together
