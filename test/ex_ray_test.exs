@@ -1,5 +1,5 @@
 defmodule ExRayTest do
-  use ExUnit.Case
+  use ExUnit.Case, async: true
   use EqualityHelper
   doctest ExRay
 
