@@ -33,6 +33,8 @@ defmodule ExRay do
   defdelegate sphere(), to: ExRay.Sphere, as: :new
 
   def origin, do: point(0, 0, 0)
+  def black, do: color(0, 0, 0)
+  def white, do: color(1, 1, 1)
 
   @doc """
   Adds two tuples together
@@ -155,6 +157,13 @@ defmodule ExRay do
       y1 * z2 - z1 * y2,
       z1 * x2 - x1 * z2,
       x1 * y2 - y1 * x2
+    )
+  end
+
+  def reflect(vector, normal) do
+    subtract(
+      vector,
+      multiply(normal, 2 * dot(vector, normal))
     )
   end
 end
