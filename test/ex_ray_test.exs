@@ -108,4 +108,22 @@ defmodule ExRayTest do
       assert multiply(c1, c2) == color(0.9, 0.2, 0.04)
     end
   end
+
+  describe "reflect/2" do
+    test "reflect from 45" do
+      v = vector(1, -1, 0)
+      n = vector(0, 1, 0)
+
+      assert reflect(v, n) == vector(1, 1, 0)
+    end
+
+    @root2_2 :math.sqrt(2) / 2
+
+    test "reflect of a slanted surface" do
+      v = vector(0, -1, 0)
+      n = vector(@root2_2, @root2_2, 0)
+
+      assert reflect(v, n) == vector(1, 0, 0)
+    end
+  end
 end
