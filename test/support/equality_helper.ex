@@ -18,6 +18,8 @@ defmodule EqualityHelper do
       def a == b do
         Kernel.==(a, b)
       end
+
+      def epsilon, do: @epsilon
     end
   end
 end

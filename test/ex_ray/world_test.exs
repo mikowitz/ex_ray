@@ -48,6 +48,26 @@ defmodule ExRay.WordTest do
 
       assert World.shade_hit(world, comps) == color(0.90498, 0.90498, 0.90498)
     end
+
+    test "shading an intersection in shadow" do
+      w =
+        World.new()
+        |> World.set_light(Light.point_light(point(0, 0, -10), white()))
+
+      s1 = Sphere.new()
+
+      s2 =
+        Sphere.new()
+        |> Sphere.set_transform(Transformation.translation(0, 0, 10))
+
+      w = World.add_objects(w, [s1, s2])
+
+      r = ray(point(0, 0, 5), vector(0, 0, 1))
+      i = Intersection.new(4, s2)
+      comps = Computations.new(i, r)
+
+      assert World.shade_hit(w, comps) == color(0.1, 0.1, 0.1)
+    end
   end
 
   describe "color_at/2" do
@@ -97,6 +117,34 @@ defmodule ExRay.WordTest do
       image = World.render(world, c)
 
       assert ExRay.Canvas.at(image, 5, 5) == color(0.38039, 0.47451, 0.28627)
+    end
+  end
+
+  describe "is_shadowed/2" do
+    setup :with_default_world
+
+    test "there is no shadow when nothing is collinear with the point and light", %{world: world} do
+      point = point(0, 10, 0)
+
+      refute World.is_shadowed(world, point)
+    end
+
+    test "there is a shadow when an object is between the point and the light", %{world: world} do
+      point = point(10, -10, 10)
+
+      assert World.is_shadowed(world, point)
+    end
+
+    test "there is no shadow when an object is behind the light", %{world: world} do
+      point = point(-20, 20, -20)
+
+      refute World.is_shadowed(world, point)
+    end
+
+    test "there is no shadow when an object is behind the point", %{world: world} do
+      point = point(-2, 2, -2)
+
+      refute World.is_shadowed(world, point)
     end
   end
 

@@ -12,7 +12,7 @@ defmodule ExRay.Material do
     |> Map.merge(Enum.into(attrs, %{}))
   end
 
-  def lighting(%__MODULE__{} = material, light, point, eyev, normalv) do
+  def lighting(%__MODULE__{} = material, light, point, eyev, normalv, in_shadow \\ false) do
     effective_color = ExRay.multiply(material.color, light.intensity)
 
     lightv = ExRay.normalize(ExRay.subtract(light.position, point))
@@ -43,6 +43,10 @@ defmodule ExRay.Material do
         {diffuse, specular}
       end
 
-    ExRay.add(ambient, diffuse) |> ExRay.add(specular)
+    if in_shadow do
+      ambient
+    else
+      ExRay.add(ambient, diffuse) |> ExRay.add(specular)
+    end
   end
 end
