@@ -1,8 +1,5 @@
 defmodule ExRay.MaterialTest do
-  use ExUnit.Case, async: true
-  use EqualityHelper
-
-  import ExRay
+  use ExRay.TestCase
 
   alias ExRay.{Light, Material}
 
@@ -96,6 +93,20 @@ defmodule ExRay.MaterialTest do
       light = Light.point_light(point(0, 0, 10), white())
 
       result = Material.lighting(material, light, position, eyev, normalv)
+
+      assert result == color(0.1, 0.1, 0.1)
+    end
+
+    test "with the surface in shadow", %{
+      material: material,
+      position: positon
+    } do
+      eyev = vector(0, 0, -1)
+      normalv = vector(0, 0, -1)
+      light = Light.point_light(point(0, 0, -10), white())
+      in_shadow = true
+
+      result = Material.lighting(material, light, positon, eyev, normalv, in_shadow)
 
       assert result == color(0.1, 0.1, 0.1)
     end

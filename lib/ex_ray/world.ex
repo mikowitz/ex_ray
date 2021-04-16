@@ -21,8 +21,17 @@ defmodule ExRay.World do
     |> Enum.sort_by(& &1.t)
   end
 
-  def shade_hit(%__MODULE__{light_source: light}, %Computations{} = comps) do
-    Material.lighting(comps.object.material, light, comps.point, comps.eyev, comps.normalv)
+  def shade_hit(%__MODULE__{light_source: light} = world, %Computations{} = comps) do
+    shadowed = is_shadowed(world, comps.over_point)
+
+    Material.lighting(
+      comps.object.material,
+      light,
+      comps.point,
+      comps.eyev,
+      comps.normalv,
+      shadowed
+    )
   end
 
   def color_at(%__MODULE__{} = world, %Ray{} = ray) do
@@ -36,6 +45,19 @@ defmodule ExRay.World do
         comps = Computations.new(intersection, ray)
         shade_hit(world, comps)
     end
+  end
+
+  def is_shadowed(%__MODULE__{} = world, [_, _, _, _] = point) do
+    v = ExRay.subtract(world.light_source.position, point)
+    distance = ExRay.magnitude(v)
+    direction = ExRay.normalize(v)
+
+    r = Ray.new(point, direction)
+    xs = intersect(world, r)
+
+    hit = Intersections.hit(xs)
+
+    hit && hit.t < distance
   end
 
   def render(%__MODULE__{} = world, %Camera{} = camera) do
@@ -59,11 +81,13 @@ defmodule ExRay.World do
       Enum.reduce(coords, {canvas, 0}, fn {x, y}, {canvas, ct} ->
         done = round(ct * ratio)
 
-        IO.write(
-          "\r|" <>
-            String.duplicate("=", done) <>
-            String.duplicate(" ", size - done) <> "|\t#{round(ct * ratio * (100 / size))}%"
-        )
+        if Mix.env() != :test do
+          IO.write(
+            "\r|" <>
+              String.duplicate("=", done) <>
+              String.duplicate(" ", size - done) <> "|\t#{round(ct * ratio * (100 / size))}%"
+          )
+        end
 
         ray = Camera.ray_for_pixel(camera, x, y)
         color = color_at(world, ray)
@@ -71,7 +95,7 @@ defmodule ExRay.World do
         {Canvas.write(canvas, {x, y}, color), ct + 1}
       end)
 
-    IO.puts("")
+    if Mix.env() != :test, do: IO.puts("")
     canvas
   end
 end
