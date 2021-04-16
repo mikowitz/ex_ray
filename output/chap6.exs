@@ -7,7 +7,7 @@ ray_origin = point(0, 0, -5)
 wall_z = 10
 wall_size = 7.0
 
-canvas_pixels = 500
+canvas_pixels = 200
 
 pixel_size = wall_size / canvas_pixels
 
@@ -21,7 +21,7 @@ shape =
   sphere()
   |> ExRay.Sphere.set_material(material)
 
-light = ExRay.Light.point_light(point(-10, 10, 10), white())
+light = ExRay.Light.point_light(point(-10, 10, -10), white())
 
 coords = for y <- 0..(canvas_pixels - 1), x <- 0..(canvas_pixels - 1), do: {x, y}
 

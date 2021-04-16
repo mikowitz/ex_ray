@@ -63,23 +63,13 @@ defmodule ExRay.Matrix do
       a02 * cofactor(matrix, {0, 2}) + a03 * cofactor(matrix, {0, 3})
   end
 
-  def submatrix(matrix, {row, col}) do
-    matrix
-    |> List.delete_at(row)
-    |> Enum.map(&List.delete_at(&1, col))
-  end
-
   def minor(matrix, {row, col}) do
-    submatrix(matrix, {row, col}) |> determinant()
+    determinant(ExRay.Matrix.Submatrix.submatrix(matrix, {row, col}))
   end
 
   def cofactor(matrix, {row, col}) do
-    with minor <- minor(matrix, {row, col}) do
-      case rem(row + col, 2) do
-        0 -> minor
-        1 -> -minor
-      end
-    end
+    minor = minor(matrix, {row, col})
+    if rem(row + col, 2) == 0, do: minor, else: -minor
   end
 
   def multiply(
