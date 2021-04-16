@@ -212,7 +212,7 @@ defmodule ExRay.MatrixTest do
           [0, 6, -3]
         ])
 
-      assert Matrix.submatrix(matrix, {0, 2}) ==
+      assert Matrix.Submatrix.submatrix(matrix, {0, 2}) ==
                matrix([
                  [-3, 2],
                  [0, 6]
@@ -228,7 +228,7 @@ defmodule ExRay.MatrixTest do
           [-7, 1, -1, 1]
         ])
 
-      assert Matrix.submatrix(matrix, {2, 1}) ==
+      assert Matrix.Submatrix.submatrix(matrix, {2, 1}) ==
                matrix([
                  [-6, 1, 6],
                  [-8, 8, 6],
@@ -246,7 +246,7 @@ defmodule ExRay.MatrixTest do
           [6, -1, 5]
         ])
 
-      b = Matrix.submatrix(a, {1, 0})
+      b = Matrix.Submatrix.submatrix(a, {1, 0})
 
       assert Matrix.determinant(b) == 25
       assert Matrix.minor(a, {1, 0}) == 25

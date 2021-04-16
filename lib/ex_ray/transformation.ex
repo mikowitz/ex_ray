@@ -100,4 +100,20 @@ defmodule ExRay.Transformation do
       ) do
     ExRay.multiply(matrix, shearing(xy, xz, yx, yz, zx, zy))
   end
+
+  def view_transform([x, y, z, _] = from, to, up) do
+    forward = ExRay.normalize(ExRay.subtract(to, from))
+    left = ExRay.cross(forward, ExRay.normalize(up))
+    true_up = ExRay.cross(left, forward)
+
+    orientation =
+      ExRay.matrix([
+        left,
+        true_up,
+        ExRay.negate(forward),
+        [0, 0, 0, 1]
+      ])
+
+    ExRay.multiply(orientation, translation(-x, -y, -z))
+  end
 end

@@ -11,6 +11,10 @@ defmodule EqualityHelper do
         Enum.zip(a, b) |> Enum.all?(fn {x, y} -> abs(x - y) < @epsilon end)
       end
 
+      def a == b when is_number(a) do
+        abs(a - b) < @epsilon
+      end
+
       def a == b do
         Kernel.==(a, b)
       end

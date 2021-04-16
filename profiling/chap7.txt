@@ -1,0 +1,347 @@
+                                                                   CNT    ACC (ms)    OWN (ms)
+Total                                                         15342601   30719.216   32096.340
+:fprof.apply_start_stop/4                                            0   30719.216       0.005
+anonymous fn/0 in :elixir_compiler_1.__FILE__/1                      1   30719.210       0.035
+Enum.reduce/3                                                    24898   30370.751      41.019
+ExRay.World.render/2                                                 1   30370.135       0.005
+Enum."-reduce/3-lists^foldl/2-0-"/3                               1251   30359.214       3.596
+anonymous fn/4 in ExRay.World.render/2                            1250   30355.618       6.584
+ExRay.Matrix.cofactor/2                                         596352   28268.145    1175.313
+ExRay.Matrix.minor/2                                            476352   28195.504    1255.748
+Enum.map/2                                                      510022   24931.936     770.551
+ExRay.Matrix.submatrix/2                                        476352   24749.495    1300.591
+Enum."-map/2-lists^map/1-0-"/2                                 1697930   24377.989    5008.867
+ExRay.Matrix.inverse/1                                            8712   22695.809      42.094
+ExRay.Matrix.determinant/1                                      486276   22355.292    1055.982
+List.delete_at/2                                               1548144   16737.344    3876.934
+anonymous fn/3 in ExRay.Matrix.inverse/1                         34848   16115.855      76.324
+Enum.reduce_range_inc/4                                         100705   16109.155     244.432
+anonymous fn/4 in ExRay.Matrix.inverse/1                         79392   15865.272     196.496
+ExRay.World.color_at/2                                            1250   15030.339       7.471
+ExRay.Camera.ray_for_pixel/3                                      1250   14979.100      18.165
+anonymous fn/2 in ExRay.Matrix.submatrix/2                     1071792   13604.765    1586.216
+List.pop_at/2                                                  1548144   12837.627    2348.367
+List.pop_at/3                                                  1548144   10480.784    2349.028
+List.do_pop_at/4                                               2917656    8126.583    5989.116
+ExRay.World.intersect/2                                           1250    7693.883       6.560
+ExRay.Computations.new/2                                           606    7237.744       6.014
+ExRay.Sphere.normal_at/2                                           606    7226.533       8.701
+:proc_lib.init_p/5                                                  25    4273.181       0.959
+ExRay.Matrix.invertible?/1                                        4962    3684.448      13.861
+:suspend                                                          7053    2896.057       0.000
+:proc_lib.init_p_do_apply/3                                         25    2530.850       0.267
+Task.Supervised.reply/4                                             25    2530.583       0.483
+Task.Supervised.reply/5                                             25    2526.678       0.521
+Task.Supervised.invoke_mfa/2                                        25    2525.544       0.313
+:erlang.apply/2                                                     25    2525.231       0.185
+anonymous fn/3 in ExPng.Chunks.ImageData.from_pixels/4              25    2525.046       0.198
+ExPng.Image.Pixelation.from_pixels/4                                25    2524.848       0.941
+:lists.reverse/2                                               1574780    2140.275    1751.434
+anonymous fn/1 in ExPng.Image.Pixelation.from_pixels/4            1250    1156.606      28.165
+anonymous fn/2 in ExPng.Image.Pixelation.from_pixels/4            1250     913.198       7.735
+Enum.find_index/2                                                 1250     905.396       7.432
+Enum.find_index_list/3                                           40062     897.964     567.986
+Enum.join/2                                                       1250     741.283      20.591
+:erlang.iolist_to_binary/1                                        3377     683.385      15.351
+:garbage_collect                                                 20938     542.092     542.092
+String.pad/4                                                      2500     486.008      37.635
+String.length/1                                                   2500     406.658      15.375
+String.Unicode.length/1                                           2500     391.283      28.123
+String.pad_trailing/3                                             2500     380.767      23.748
+ExRay.Canvas.save/2                                                  1     348.168       0.001
+ExPng.Image.to_file/2                                                1     348.167       0.001
+ExPng.Image.to_file/3                                                1     348.166       0.003
+ExPng.Image.Encoding.to_raw_data/2                                   1     346.971       0.006
+ExRay.Canvas.write/3                                              1250     339.432       7.190
+String.Unicode.do_length/2                                       16978     336.128     186.165
+ExPng.Image.Encoding.to_raw_data/5                                   1     322.851       0.003
+ExPng.Chunks.ImageData.from_pixels/4                                 1     322.385       0.005
+anonymous fn/2 in ExPng.Image.Pixelation.from_pixels/4            1250     303.238      13.489
+ExPng.Image.draw/3                                                1250     300.621       2.266
+anonymous fn/1 in ExPng.Chunks.ImageData.from_pixels/4              25     300.074       0.137
+anonymous fn/2 in ExPng.Image.Pixelation.from_pixels/4           40062     300.043     211.586
+Task.await/1                                                        25     299.937       0.135
+Task.await/2                                                        25     299.802       0.982
+ExPng.Image.Drawing.draw/3                                        1250     298.355       2.792
+Kernel.update_in/3                                                1250     295.504       4.403
+Kernel.get_and_update_in/3                                        1250     290.952       2.884
+Access.get_and_update/3                                           1250     288.068       4.552
+String.pad_leading/3                                              2500     283.789      20.685
+ExPng.Image.get_and_update/3                                      1250     283.516      11.020
+String.Unicode.next_grapheme_size/1                              21978     214.503     127.772
+ExRay.Ray.intersect/2                                             2500     163.412      20.696
+Enum.at/2                                                         3751     135.434       5.932
+String.graphemes/1                                                2500     134.115      14.976
+Enum.at/3                                                         3751     129.431      10.418
+List.replace_at/3                                                 2500     125.808       3.681
+List.do_replace_at/3                                             48125     121.884     119.412
+String.Unicode.graphemes/1                                        2500     119.133      29.281
+Enum.slice_any/3                                                  3751     118.541      11.692
+anonymous fn/2 in ExRay.Matrix.inverse/1                         19848     110.608      29.044
+ExPng.Image.fetch/2                                               1250     106.399       5.741
+:lists.reverse/1                                                 26174     103.112      68.658
+Enum.drop_list/2                                                 64376     101.535     101.041
+Enum.sort_by/2                                                    2502     100.425       4.252
+Enum.sort_by/3                                                    2502      96.145      15.180
+anonymous fn/2 in ExRay.Matrix.inverse/1                         79392      88.774      86.646
+anonymous fn/2 in ExRay.World.intersect/2                         1250      87.305       2.108
+String.Unicode.next_extend_size/3                                16978      81.460      78.278
+Enumerable.reduce/3                                                 52      62.052       0.398
+String.Unicode.do_graphemes/2                                     5000      61.373      50.480
+Enum.chunk_every/4                                                  26      57.583       0.176
+Enum.chunk_every/3                                                  25      57.491       0.183
+Stream.Reducers.chunk_every/5                                       26      57.407       0.464
+ExRay.Intersections.hit/1                                         1250      57.323       4.233
+anonymous fn/4 in Enum.chunk_every/4                                26      56.609       0.130
+Enum.chunk_while/4                                                  26      56.479       0.513
+Enumerable.List.reduce/3                                          1302      54.639      13.994
+ExPng.Utilities.reduce_to_binary/1                                  53      40.999       0.689
+anonymous fn/3 in Enum.chunk_while/4                              1276      40.590      11.688
+List.flatten/1                                                    1305      38.123       2.808
+:lists.flatten/1                                                  1305      35.294       2.393
+String.build_filler/5                                             3377      35.178      27.676
+:lists.do_flatten/2                                              10256      32.901      32.296
+ExRay.World.shade_hit/2                                            606      32.032       1.662
+Enum.sort/2                                                       2502      31.102       7.563
+ExRay.Material.lighting/5                                          606      30.339      12.153
+anonymous fn/5 in Stream.Reducers.chunk_every/5                   1276      28.649      18.328
+Enum.reduce/2                                                       54      24.959       0.219
+Enum."-reduce/2-lists^foldl/2-0-"/3                               2689      24.740      16.892
+ExRay.multiply/2                                                  9855      24.668      13.709
+ExPng.Image.unique_pixels/1                                          2      24.066       0.009
+ExRay.normalize/1                                                 2464      21.096       7.230
+:lists.sort/2                                                     2502      20.787       5.470
+ExPng.Chunks.ImageData.apply_filter/3                                1      20.320       0.007
+ExPng.Image.Filtering.apply_filter/3                                25      18.060       0.125
+ExRay.Matrix.transpose/1                                          5568      16.268       9.533
+ExRay.Ray.transform/2                                             1250      16.261       5.846
+ExRay.magnitude/1                                                 2464      13.820       7.983
+anonymous fn/1 in Enum.join/2                                     1250      13.151       7.638
+Enum.take/2                                                       1301      11.812       4.908
+anonymous fn/3 in ExPng.Chunks.ImageData.apply_filter/3             25      11.606       0.025
+Enum.uniq/1                                                          3      11.447       0.005
+Enum.uniq_by/2                                                       3      11.442       0.005
+Enum.uniq_list/3                                                  2504      11.437       8.622
+ExPng.Image.Encoding.build_header/2                                  1      11.352       0.004
+ExPng.Image.Encoding.bit_depth_and_color_mode/1                      1      11.344       0.008
+ExRay.Matrix.multiply/2                                           6219      10.930      10.712
+anonymous fn/1 in ExRay.Canvas.write/3                            3750      10.872       6.713
+:lists.fsplit_1/6                                                 1436      10.258       2.864
+anonymous fn/2 in Enum.sort_by/3                                  2650      10.140       7.223
+ExRay.origin/0                                                    3106       8.900       4.558
+:math.sqrt/1                                                      3681       8.014       5.023
+anonymous fn/2 in ExPng.Utilities.reduce_to_binary/1              2586       7.698       7.582
+Enum.find/2                                                       1250       7.512       2.101
+ExRay.dot/2                                                       6174       7.424       7.260
+ExRay.Canvas.new/2                                                   1       6.895       0.004
+anonymous fn/3 in ExRay.Canvas.new/2                                25       6.828       0.101
+:lists.rfmergel/4                                                 1214       6.722       3.966
+ExRay.Matrix.new/1                                                5579       6.670       6.648
+Enumerable.Function.reduce/3                                        26       6.604       0.026
+anonymous fn/4 in Stream.unfold/2                                   26       6.578       0.026
+Stream.do_unfold/4                                                1326       6.552       3.930
+:erlang.binary_to_integer/2                                       1250       6.391       6.121
+:erlang.integer_to_binary/2                                       1250       5.960       5.308
+ExRay.point/3                                                     4359       5.957       5.142
+anonymous fn/3 in Enum.to_sort_by_fun/1                           1436       5.723       2.708
+ExRay.subtract/2                                                  4319       5.564       5.411
+Enum.entry_to_string/1                                            1250       5.513       5.513
+Enum.find/3                                                       1250       5.411       2.121
+anonymous fn/2 in Kernel.update_in/3                              1250       5.347       3.680
+ExRay.Ray.new/2                                                   2500       4.946       4.903
+Enum.take_list/2                                                  3776       4.841       4.348
+ExRay.reflect/2                                                    606       4.811       2.696
+ExRay.Canvas.normalize/1                                          3750       4.159       4.159
+ExRay.Ray.position/2                                               606       3.651       2.137
+ExRay.black/0                                                     1250       3.524       2.002
+:binary.copy/2                                                     877       3.374       3.374
+Enum.find_list/3                                                  1250       3.290       2.443
+Enum.to_sort_by_fun/1                                             2502       3.024       2.977
+:erlang."=<"/2                                                    1437       2.970       1.804
+Task.Supervised.initial_call/1                                      25       2.910       0.322
+anonymous fn/1 in Enum.sort_by/3                                  2650       2.809       2.809
+Enum.to_sort_fun/1                                                2502       2.688       2.666
+anonymous fn/1 in Enum.uniq/1                                     2501       2.625       2.596
+Enum.zip/2                                                          25       2.556       0.025
+ExPng.Image.Filtering."-apply_filter/3-lc$^4/1-2-"/1              1275       2.545       2.535
+ExPng.Image.Filtering."-apply_filter/3-lc$^3/1-1-"/1              1275       2.541       2.533
+Enum.zip_list/2                                                   1275       2.531       2.528
+ExPng.Color.rgb/3                                                 1250       2.233       2.233
+Task.Supervised.get_initial_call/1                                  25       2.212       0.404
+ExRay.add/2                                                       1818       2.113       2.113
+:erlang.fun_info/2                                                  50       1.808       0.719
+anonymous fn/3 in ExPng.Chunks.ImageData.from_pixels/4              25       1.552       0.047
+ExRay.color/3                                                     1253       1.525       1.425
+Task.async/1                                                        25       1.505       0.040
+ExRay.Intersection.new/2                                          1212       1.495       1.495
+Task.async/3                                                        25       1.465       0.248
+ExRay.negate/1                                                    1213       1.417       1.399
+anonymous fn/1 in ExRay.World.intersect/2                         1212       1.389       1.389
+anonymous fn/2 in ExPng.Image.Drawing.draw/3                      1250       1.384       1.377
+:lists.fmergel/4                                                  1214       1.342       1.342
+anonymous fn/2 in Enum.take/2                                     1300       1.312       1.306
+anonymous fn/1 in Stream.cycle/1                                  1300       1.306       1.303
+anonymous fn/1 in ExRay.Intersections.hit/1                       1212       1.298       1.298
+anonymous fn/3 in ExRay.World.render/2                            1250       1.258       1.254
+anonymous fn/1 in ExPng.Image.Filtering.apply_filter/3            1250       1.258       1.254
+ExPng.RawData.to_file/3                                              1       1.192       0.005
+ExPng.Chunks.Palette.to_bytes/1                                      1       1.037       0.001
+ExPng.Chunks.Palette.to_bytes/2                                      1       1.036       0.004
+Task.Supervised.start_link/4                                        25       0.953       0.075
+:proc_lib.spawn_link/3                                              25       0.878       0.159
+anonymous fn/1 in ExRay.Intersections.hit/1                        606       0.847       0.847
+Process.put/2                                                       50       0.733       0.534
+ExRay.vector/3                                                     609       0.709       0.692
+ExRay.Matrix.identity/0                                              7       0.698       0.007
+ExRay.Matrix.identity/1                                              7       0.691       0.021
+:erlang.send/2                                                      50       0.647       0.641
+anonymous fn/3 in ExRay.Matrix.identity/1                           28       0.586       0.112
+Enum.reverse/1                                                      53       0.559       0.351
+:erlang.spawn_link/3                                                25       0.521       0.511
+Task.Supervised.put_callers/1                                       25       0.512       0.155
+:erlang.put/2                                                      100       0.469       0.469
+ExPng.Chunks.Transparency.build_from_pixel_palette/1                 1       0.463       0.003
+Enumerable.impl_for!/1                                              52       0.411       0.285
+anonymous fn/3 in ExRay.World.render/2                              50       0.376       0.100
+ExRay.Transformation.scaling/3                                       3       0.326       0.006
+:erlang.demonitor/2                                                 28       0.275       0.163
+anonymous fn/1 in ExPng.Image.unique_pixels/1                      226       0.230       0.230
+ExRay.Transformation.rotation_y/2                                    4       0.224       0.014
+ExRay.Transformation.rotation_x/2                                    4       0.224       0.014
+ExRay.Transformation.scaling/4                                       5       0.210       0.007
+ExRay.Transformation.rotation_y/1                                    2       0.200       0.004
+ExRay.Transformation.rotation_x/1                                    2       0.200       0.004
+:proc_lib.get_my_name/0                                             25       0.171       0.070
+Task.get_owner/1                                                    25       0.171       0.072
+anonymous fn/3 in Stream.Reducers.chunk_every/5                     26       0.166       0.131
+Enumerable.impl_for/1                                               52       0.126       0.126
+:proc_lib.trans_init/3                                              25       0.123       0.123
+anonymous fn/1 in ExPng.Chunks.Transparency.build_from_pixel       113       0.113       0.113
+anonymous fn/1 in ExPng.Chunks.Palette.to_bytes/2                  113       0.113       0.113
+:erts_internal.flush_monitor_messages/3                             25       0.112       0.112
+anonymous fn/3 in ExRay.Matrix.identity/1                          112       0.112       0.112
+:proc_lib.proc_info/2                                               25       0.101       0.072
+Process.info/2                                                      25       0.099       0.071
+:erlang.max/2                                                       26       0.092       0.092
+Range.new/2                                                         87       0.091       0.089
+ExPng.Color.black/0                                                 25       0.075       0.025
+File.write/2                                                         1       0.069       0.001
+ExPng.Chunks.ImageData.to_bytes/2                                    1       0.069       0.004
+File.write/3                                                         1       0.068       0.003
+:file.write_file/3                                                   1       0.063       0.003
+ExPng.Chunks.ImageData.deflate/2                                     1       0.061       0.006
+:file.do_write_file/3                                                1       0.058       0.003
+:erlang.process_info/2                                              50       0.057       0.057
+Stream.cycle/1                                                      26       0.054       0.026
+ExPng.Color.grayscale/1                                             25       0.050       0.025
+anonymous fn/2 in ExPng.Chunks.ImageData.apply_filter/3             49       0.049       0.049
+:erlang.monitor/2                                                   28       0.034       0.034
+:file.open/2                                                         1       0.032       0.005
+ExRay.Transformation.view_transform/3                                1       0.032       0.009
+Task.get_callers/1                                                  25       0.028       0.028
+Stream.unfold/2                                                     26       0.028       0.027
+:proc_lib.get_ancestors/0                                           25       0.027       0.027
+:zlib.deflate/3                                                      1       0.025       0.005
+ExPng.Color.grayscale/2                                             25       0.025       0.025
+anonymous fn/2 in ExPng.Chunks.ImageData.apply_filter/3             25       0.025       0.025
+:file.call/2                                                         1       0.020       0.003
+Enum.all?/2                                                          3       0.018       0.003
+:gen_server.call/3                                                   1       0.016       0.002
+Keyword.get/3                                                        4       0.016       0.012
+Enum.all_list/2                                                      5       0.015       0.010
+:gen.call/4                                                          1       0.014       0.001
+:zlib.deflateInit/2                                                  1       0.013       0.001
+:gen.do_for_proc/2                                                   1       0.013       0.002
+:file.write/2                                                        1       0.013       0.002
+:zlib.deflateInit/6                                                  1       0.012       0.006
+ExRay.Material.new/1                                                 1       0.012       0.004
+ExRay.World.add_objects/2                                            1       0.011       0.003
+:io.request/2                                                        1       0.010       0.002
+anonymous fn/4 in :gen.call/4                                        1       0.010       0.001
+:file.close/1                                                        1       0.010       0.002
+:gen.do_call/4                                                       1       0.009       0.005
+ExRay.Transformation.translation/3                                   3       0.009       0.003
+ExRay.Sphere.new/0                                                   3       0.009       0.006
+ExPng.Image.new/1                                                    1       0.009       0.002
+:math.sin/1                                                          8       0.008       0.008
+:math.cos/1                                                          8       0.008       0.008
+:file.file_request/2                                                 1       0.008       0.004
+ExPng.Image.Encoding.grayscale?/1                                    1       0.008       0.001
+ExPng.Image.Encoding.black_and_white?/1                              1       0.008       0.001
+ExPng.Chunks.Header.to_bytes/1                                       1       0.008       0.001
+:zlib.dequeue_all_chunks/2                                           1       0.007       0.001
+:io.execute_request/2                                                1       0.007       0.004
+ExPng.Chunks.Header.to_bytes/2                                       1       0.007       0.004
+:zlib.enqueue_input/2                                                1       0.006       0.002
+:zlib.dequeue_all_chunks_1/3                                         1       0.006       0.002
+ExRay.Transformation.translation/4                                   3       0.006       0.003
+ExPng.Color.pixel_bytesize/2                                         1       0.006       0.002
+ExPng.Image.Encoding.opaque?/1                                       1       0.005       0.001
+Enum.into/2                                                          1       0.005       0.003
+:lists.keyfind/3                                                     4       0.004       0.004
+:file.check_args/1                                                   4       0.004       0.004
+:erlang.crc32/1                                                      4       0.004       0.004
+ExRay.white/0                                                        2       0.004       0.002
+ExRay.cross/2                                                        2       0.004       0.002
+ExPng.Chunks.End.to_bytes/1                                          1       0.004       0.001
+Enum.take_while/2                                                    1       0.004       0.001
+:zlib.restore_progress/2                                             1       0.003       0.002
+:zlib.enqueue_input_1/2                                              1       0.003       0.002
+:zlib.dequeue_next_chunk/2                                           1       0.003       0.001
+:zlib.deflate_opts/1                                                 1       0.003       0.002
+:lists.member/2                                                      3       0.003       0.003
+:erlang.make_ref/0                                                   3       0.003       0.003
+ExRay.Sphere.set_transform/2                                         3       0.003       0.003
+ExRay.Sphere.set_material/2                                          3       0.003       0.003
+ExRay.Camera.new/3                                                   1       0.003       0.002
+ExPng.Color.pixel_bitsize/2                                          1       0.003       0.002
+ExPng.Chunks.End.to_bytes/2                                          1       0.003       0.002
+Enum.take_while_list/2                                               1       0.003       0.002
+:zlib.open/0                                                         1       0.002       0.001
+:zlib.deflateEnd/1                                                   1       0.002       0.001
+:zlib.close/1                                                        1       0.002       0.001
+:zlib.append_iolist/2                                                2       0.002       0.002
+:zlib."-fun.deflate_nif/4-"/4                                        1       0.002       0.001
+:maps.merge/2                                                        2       0.002       0.002
+:file.make_binary/1                                                  2       0.002       0.002
+ExRay.matrix/1                                                       1       0.002       0.001
+ExPng.Color.grayscale?/1                                             2       0.002       0.002
+ExPng.Color.black_or_white?/1                                        2       0.002       0.002
+:zlib.open_nif/0                                                     1       0.001       0.001
+:zlib.getStash_nif/1                                                 1       0.001       0.001
+:zlib.enqueue_nif/2                                                  1       0.001       0.001
+:zlib.deflate_nif/4                                                  1       0.001       0.001
+:zlib.deflateInit_nif/6                                              1       0.001       0.001
+:zlib.deflateEnd_nif/1                                               1       0.001       0.001
+:zlib.close_nif/1                                                    1       0.001       0.001
+:zlib.arg_strategy/1                                                 1       0.001       0.001
+:zlib.arg_method/1                                                   1       0.001       0.001
+:zlib.arg_mem/1                                                      1       0.001       0.001
+:zlib.arg_level/1                                                    1       0.001       0.001
+:zlib.arg_flush/1                                                    1       0.001       0.001
+:zlib.arg_bitsz/1                                                    1       0.001       0.001
+:math.tan/1                                                          1       0.001       0.001
+:maps.from_list/1                                                    1       0.001       0.001
+:io.io_request/2                                                     1       0.001       0.001
+:fprof."-apply_start_stop/4-after$^1/0-0-"/3                         1       0.001       0.001
+:file.file_name/1                                                    1       0.001       0.001
+:erlang.whereis/1                                                    1       0.001       0.001
+:erlang.send/3                                                       1       0.001       0.001
+:erlang.list_to_tuple/1                                              1       0.001       0.001
+:erlang.iolist_to_iovec/1                                            1       0.001       0.001
+:erlang.++/2                                                         1       0.001       0.001
+IO.chardata_to_string/1                                              1       0.001       0.001
+File.normalize_modes/2                                               1       0.001       0.001
+ExRay.World.set_light/2                                              1       0.001       0.001
+ExRay.World.new/0                                                    1       0.001       0.001
+ExRay.Light.point_light/2                                            1       0.001       0.001
+ExRay.Camera.set_transform/2                                         1       0.001       0.001
+ExPng.Image.Encoding.indexed_bit_depth/1                             1       0.001       0.001
+ExPng.Image.Encoding.indexable?/1                                    1       0.001       0.001
+ExPng.Color.to_bytesize/1                                            1       0.001       0.001
+ExPng.Color.opaque?/1                                                1       0.001       0.001
+ExPng.Color.channels_for_color_mode/1                                1       0.001       0.001
+anonymous fn/1 in ExPng.Chunks.Transparency.build_from_pixel         1       0.001       0.001
+ExPng.Chunks.Header.validate_color_mode/1                            1       0.001       0.001
+ExPng.Chunks.Header.validate_bit_depth/1                             1       0.001       0.001
+:undefined                                                           0       0.000       0.000
