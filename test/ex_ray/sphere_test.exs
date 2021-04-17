@@ -7,43 +7,6 @@ defmodule ExRay.SphereTest do
   import ExRay
   import ExRay.Transformation
 
-  describe "new/0" do
-    test "creates a sphere with a default transform of the identity matrix" do
-      s = sphere()
-
-      assert s.transform == ExRay.Matrix.identity()
-    end
-
-    test "creates a sphere with a default material" do
-      s = sphere()
-
-      assert s.material == ExRay.Material.new()
-    end
-  end
-
-  describe "set_material/2" do
-    test "updates the material for a sphere" do
-      s = sphere()
-
-      m = ExRay.Material.new(ambient: 1)
-
-      s = Sphere.set_material(s, m)
-
-      assert s.material == m
-    end
-  end
-
-  describe "set_transform/2" do
-    test "updates sthe transform for a sphere" do
-      s = sphere()
-      t = translation(2, 3, 4)
-
-      s = Sphere.set_transform(s, t)
-
-      assert s.transform == t
-    end
-  end
-
   describe "normal_at/2" do
     test "at a point on the x axis" do
       s = sphere()

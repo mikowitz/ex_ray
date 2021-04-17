@@ -3,12 +3,12 @@ defmodule ExRay.Computations do
 
   @epsilon 0.0001
 
-  alias ExRay.{Intersection, Ray, Sphere}
+  alias ExRay.{Intersection, Ray}
 
   def new(%Intersection{object: object, t: t}, %Ray{direction: direction} = ray) do
     point = Ray.position(ray, t)
     eyev = ExRay.negate(direction)
-    normalv = Sphere.normal_at(object, point)
+    normalv = object.__struct__.normal_at(object, point)
 
     {inside, normalv} =
       if ExRay.dot(normalv, eyev) < 0 do
