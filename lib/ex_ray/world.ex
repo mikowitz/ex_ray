@@ -26,8 +26,9 @@ defmodule ExRay.World do
 
     Material.lighting(
       comps.object.material,
+      comps.object,
       light,
-      comps.point,
+      comps.over_point,
       comps.eyev,
       comps.normalv,
       shadowed
