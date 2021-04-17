@@ -20,6 +20,7 @@ floor =
   |> Plane.set_material(
     Material.new(
       specular: 0,
+      reflective: 0.3333,
       pattern: ExRay.Pattern.Checkers.new([black(), white()])
     )
   )
@@ -50,7 +51,7 @@ middle =
 right =
   Sphere.new()
   |> Sphere.set_transform(
-    translation(1.5, 0.6, -0.5)
+    translation(1.5, 0.75, -0.5)
     |> scaling(0.5, 0.5, 0.5)
   )
   |> Sphere.set_material(Material.new(color: color(0.5, 1, 0.1), diffuse: 0.7, specular: 0.3))
@@ -69,8 +70,8 @@ world =
   |> World.set_light(Light.point_light(point(-5, 10, -10), white()))
 
 camera =
-  Camera.new(1000, 500, pi / 3)
+  Camera.new(200, 100, pi / 3)
   |> Camera.set_transform(view_transform(point(0, 1.5, -6), point(0, 1, 0), vector(0, 1, 0)))
 
 canvas = World.render(world, camera)
-Canvas.save(canvas, "output/chap10.png")
+Canvas.save(canvas, "output/chap11.png")

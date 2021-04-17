@@ -21,21 +21,30 @@ defmodule ExRay.World do
     |> Enum.sort_by(& &1.t)
   end
 
-  def shade_hit(%__MODULE__{light_source: light} = world, %Computations{} = comps) do
+  def shade_hit(
+        %__MODULE__{light_source: light} = world,
+        %Computations{} = comps,
+        recursive_depth \\ 4
+      ) do
     shadowed = is_shadowed(world, comps.over_point)
 
-    Material.lighting(
-      comps.object.material,
-      comps.object,
-      light,
-      comps.over_point,
-      comps.eyev,
-      comps.normalv,
-      shadowed
-    )
+    surface =
+      Material.lighting(
+        comps.object.material,
+        comps.object,
+        light,
+        comps.over_point,
+        comps.eyev,
+        comps.normalv,
+        shadowed
+      )
+
+    reflected = reflected_color(world, comps, recursive_depth)
+
+    ExRay.add(surface, reflected)
   end
 
-  def color_at(%__MODULE__{} = world, %Ray{} = ray) do
+  def color_at(%__MODULE__{} = world, %Ray{} = ray, recursive_depth \\ 4) do
     xs = intersect(world, ray)
 
     case Intersections.hit(xs) do
@@ -44,7 +53,7 @@ defmodule ExRay.World do
 
       intersection ->
         comps = Computations.new(intersection, ray)
-        shade_hit(world, comps)
+        shade_hit(world, comps, recursive_depth)
     end
   end
 
@@ -59,6 +68,27 @@ defmodule ExRay.World do
     hit = Intersections.hit(xs)
 
     hit && hit.t < distance
+  end
+
+  def reflected_color(world, computations, recursive_depth \\ 4)
+  def reflected_color(%__MODULE__{}, %Computations{}, 0), do: ExRay.black()
+
+  def reflected_color(
+        %__MODULE__{} = world,
+        %Computations{
+          over_point: over_point,
+          reflectv: reflectv,
+          object: object
+        },
+        recursive_depth
+      ) do
+    if object.material.reflective == 0.0 do
+      ExRay.black()
+    else
+      reflect_ray = ExRay.ray(over_point, reflectv)
+      color = color_at(world, reflect_ray, recursive_depth - 1)
+      ExRay.multiply(color, object.material.reflective)
+    end
   end
 
   def render(%__MODULE__{} = world, %Camera{} = camera) do

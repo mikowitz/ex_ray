@@ -1,15 +1,14 @@
 defmodule ExRay.Material do
-  defstruct [:color, :ambient, :diffuse, :specular, :shininess, pattern: nil]
+  defstruct color: ExRay.white(),
+            ambient: 0.1,
+            diffuse: 0.9,
+            specular: 0.9,
+            shininess: 200.0,
+            reflective: 0.0,
+            pattern: nil
 
   def new(attrs \\ []) do
-    %__MODULE__{
-      color: ExRay.white(),
-      ambient: 0.1,
-      diffuse: 0.9,
-      specular: 0.9,
-      shininess: 200.0
-    }
-    |> Map.merge(Enum.into(attrs, %{}))
+    Map.merge(%__MODULE__{}, Enum.into(attrs, %{}))
   end
 
   def lighting(%__MODULE__{} = material, object, light, point, eyev, normalv, in_shadow \\ false) do

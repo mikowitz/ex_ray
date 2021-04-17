@@ -1,5 +1,5 @@
 defmodule ExRay.Computations do
-  defstruct [:t, :object, :point, :eyev, :normalv, :inside, :over_point]
+  defstruct [:t, :object, :point, :eyev, :normalv, :inside, :reflectv, :over_point]
 
   @epsilon 0.0001
 
@@ -18,6 +18,7 @@ defmodule ExRay.Computations do
       end
 
     over_point = ExRay.add(point, ExRay.multiply(normalv, @epsilon))
+    reflectv = ExRay.reflect(direction, normalv)
 
     %__MODULE__{
       t: t,
@@ -26,6 +27,7 @@ defmodule ExRay.Computations do
       eyev: eyev,
       normalv: normalv,
       inside: inside,
+      reflectv: reflectv,
       over_point: over_point
     }
   end

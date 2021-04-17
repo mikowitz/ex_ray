@@ -1,7 +1,7 @@
 defmodule ExRay.ComputationsTest do
   use ExRay.TestCase
 
-  alias ExRay.{Computations, Intersection, Sphere, Transformation}
+  alias ExRay.{Computations, Intersection, Plane, Sphere, Transformation}
 
   describe "new/2" do
     test "prepares computations from a ray and an intersection" do
@@ -49,6 +49,19 @@ defmodule ExRay.ComputationsTest do
 
       assert oz < -epsilon() / 2
       assert z > oz
+    end
+
+    @root2 :math.sqrt(2)
+
+    test "precomputes the reflection vector" do
+      shape = Plane.new()
+
+      ray = ray(point(0, 1, -1), vector(0, -@root2 / 2, @root2 / 2))
+      i = Intersection.new(@root2, shape)
+
+      comps = Computations.new(i, ray)
+
+      assert comps.reflectv == vector(0, @root2 / 2, @root2 / 2)
     end
   end
 end

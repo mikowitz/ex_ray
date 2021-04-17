@@ -1,7 +1,19 @@
 defmodule ExRay.WordTest do
   use ExRay.TestCase
 
-  alias ExRay.{Camera, Computations, Intersection, Light, Material, Sphere, Transformation, World}
+  alias ExRay.{
+    Camera,
+    Computations,
+    Intersection,
+    Light,
+    Material,
+    Plane,
+    Sphere,
+    Transformation,
+    World
+  }
+
+  @root2 :math.sqrt(2)
 
   describe "new/0" do
     test "creates an empty world" do
@@ -68,6 +80,22 @@ defmodule ExRay.WordTest do
 
       assert World.shade_hit(w, comps) == color(0.1, 0.1, 0.1)
     end
+
+    test "with a reflective material", %{world: world} do
+      shape =
+        Plane.new()
+        |> Plane.set_material(Material.new(reflective: 0.5))
+        |> Plane.set_transform(Transformation.translation(0, -1, 0))
+
+      world = World.add_objects(world, [shape])
+
+      ray = ray(point(0, 0, -3), vector(0, -@root2 / 2, @root2 / 2))
+      i = Intersection.new(@root2, shape)
+
+      comps = Computations.new(i, ray)
+
+      assert World.shade_hit(world, comps) == color(0.87677, 0.92436, 0.82918)
+    end
   end
 
   describe "color_at/2" do
@@ -99,6 +127,27 @@ defmodule ExRay.WordTest do
       ray = ray(point(0, 0, 0.75), vector(0, 0, -1))
 
       assert World.color_at(world, ray) == inner_material.color
+    end
+
+    test "with mutually reflective surfaces" do
+      world =
+        World.new()
+        |> World.set_light(Light.point_light(origin(), white()))
+
+      lower =
+        Plane.new()
+        |> Plane.set_material(Material.new(reflective: 1))
+        |> Plane.set_transform(Transformation.translation(0, -1, 0))
+
+      upper =
+        Plane.new()
+        |> Plane.set_material(Material.new(reflective: 1))
+        |> Plane.set_transform(Transformation.translation(0, 1, 0))
+
+      world = World.add_objects(world, [lower, upper])
+      ray = ray(origin(), vector(0, 1, 0))
+
+      assert World.color_at(world, ray) == color(9.5, 9.5, 9.5)
     end
   end
 
@@ -145,6 +194,56 @@ defmodule ExRay.WordTest do
       point = point(-2, 2, -2)
 
       refute World.is_shadowed(world, point)
+    end
+  end
+
+  describe "reflected_color/2" do
+    setup :with_default_world
+
+    test "is black for a non-reflective material", %{world: world} do
+      ray = ray(origin(), vector(0, 0, 1))
+      [s1, s2] = world.objects
+
+      s2 = Sphere.set_material(s2, %{s2.material | ambient: 1})
+
+      world = %{world | objects: [s1, s2]}
+
+      i = Intersection.new(1, s2)
+
+      comps = Computations.new(i, ray)
+
+      assert World.reflected_color(world, comps) == black()
+    end
+
+    test "for a reflective material", %{world: world} do
+      shape =
+        Plane.new()
+        |> Plane.set_material(Material.new(reflective: 0.5))
+        |> Plane.set_transform(Transformation.translation(0, -1, 0))
+
+      world = World.add_objects(world, [shape])
+
+      ray = ray(point(0, 0, -3), vector(0, -@root2 / 2, @root2 / 2))
+      i = Intersection.new(@root2, shape)
+
+      comps = Computations.new(i, ray)
+
+      assert World.reflected_color(world, comps) == color(0.19032, 0.2379, 0.14274)
+    end
+
+    test "at maximum recursive depth", %{world: world} do
+      shape =
+        Plane.new()
+        |> Plane.set_material(Material.new(reflective: 0.5))
+        |> Plane.set_transform(Transformation.translation(0, -1, 0))
+
+      world = World.add_objects(world, [shape])
+      ray = ray(point(0, 0, -3), vector(0, -@root2 / 2, @root2 / 2))
+      i = Intersection.new(@root2, shape)
+
+      comps = Computations.new(i, ray)
+
+      assert World.reflected_color(world, comps, 0) == black()
     end
   end
 
