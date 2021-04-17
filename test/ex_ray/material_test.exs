@@ -1,7 +1,8 @@
 defmodule ExRay.MaterialTest do
   use ExRay.TestCase
 
-  alias ExRay.{Light, Material}
+  alias ExRay.{Light, Material, Pattern}
+  alias ExRay.Test.TestShape
 
   describe "new/0" do
     test "returns the default material" do
@@ -38,7 +39,7 @@ defmodule ExRay.MaterialTest do
       normalv = vector(0, 0, -1)
       light = Light.point_light(point(0, 0, -10), white())
 
-      result = Material.lighting(material, light, position, eyev, normalv)
+      result = Material.lighting(material, TestShape.new(), light, position, eyev, normalv)
 
       assert result == color(1.9, 1.9, 1.9)
     end
@@ -53,7 +54,7 @@ defmodule ExRay.MaterialTest do
       normalv = vector(0, 0, -1)
       light = Light.point_light(point(0, 0, -10), white())
 
-      result = Material.lighting(material, light, position, eyev, normalv)
+      result = Material.lighting(material, TestShape.new(), light, position, eyev, normalv)
 
       assert result == color(1.0, 1.0, 1.0)
     end
@@ -66,7 +67,7 @@ defmodule ExRay.MaterialTest do
       normalv = vector(0, 0, -1)
       light = Light.point_light(point(0, 10, -10), white())
 
-      result = Material.lighting(material, light, position, eyev, normalv)
+      result = Material.lighting(material, TestShape.new(), light, position, eyev, normalv)
 
       assert result == color(0.7364, 0.7364, 0.7364)
     end
@@ -79,7 +80,7 @@ defmodule ExRay.MaterialTest do
       normalv = vector(0, 0, -1)
       light = Light.point_light(point(0, 10, -10), white())
 
-      result = Material.lighting(material, light, position, eyev, normalv)
+      result = Material.lighting(material, TestShape.new(), light, position, eyev, normalv)
 
       assert result == color(1.6364, 1.6364, 1.6364)
     end
@@ -92,7 +93,7 @@ defmodule ExRay.MaterialTest do
       normalv = vector(0, 0, -1)
       light = Light.point_light(point(0, 0, 10), white())
 
-      result = Material.lighting(material, light, position, eyev, normalv)
+      result = Material.lighting(material, TestShape.new(), light, position, eyev, normalv)
 
       assert result == color(0.1, 0.1, 0.1)
     end
@@ -106,9 +107,30 @@ defmodule ExRay.MaterialTest do
       light = Light.point_light(point(0, 0, -10), white())
       in_shadow = true
 
-      result = Material.lighting(material, light, positon, eyev, normalv, in_shadow)
+      result =
+        Material.lighting(material, TestShape.new(), light, positon, eyev, normalv, in_shadow)
 
       assert result == color(0.1, 0.1, 0.1)
+    end
+
+    test "with a pattern applied" do
+      material =
+        Material.new(
+          pattern: Pattern.Stripes.new([white(), black()]),
+          ambient: 1,
+          diffuse: 0,
+          specular: 0
+        )
+
+      eyev = vector(0, 0, -1)
+      normalv = vector(0, 0, -1)
+      light = Light.point_light(point(0, 0, -10), white())
+
+      c1 = Material.lighting(material, TestShape.new(), light, point(0.9, 0, 0), eyev, normalv)
+      c2 = Material.lighting(material, TestShape.new(), light, point(1.1, 0, 0), eyev, normalv)
+
+      assert c1 == white()
+      assert c2 == black()
     end
   end
 
