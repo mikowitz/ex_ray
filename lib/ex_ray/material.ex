@@ -5,10 +5,21 @@ defmodule ExRay.Material do
             specular: 0.9,
             shininess: 200.0,
             reflective: 0.0,
+            transparency: 0.0,
+            refractive_index: 1.0,
             pattern: nil
 
   def new(attrs \\ []) do
     Map.merge(%__MODULE__{}, Enum.into(attrs, %{}))
+  end
+
+  def glass(attrs \\ []) do
+    new(
+      Map.merge(
+        %{transparency: 1.0, refractive_index: 1.52},
+        Enum.into(attrs, %{})
+      )
+    )
   end
 
   def lighting(%__MODULE__{} = material, object, light, point, eyev, normalv, in_shadow \\ false) do

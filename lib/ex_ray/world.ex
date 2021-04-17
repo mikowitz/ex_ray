@@ -24,7 +24,7 @@ defmodule ExRay.World do
   def shade_hit(
         %__MODULE__{light_source: light} = world,
         %Computations{} = comps,
-        recursive_depth \\ 4
+        recursive_depth \\ 5
       ) do
     shadowed = is_shadowed(world, comps.over_point)
 
@@ -40,11 +40,12 @@ defmodule ExRay.World do
       )
 
     reflected = reflected_color(world, comps, recursive_depth)
+    refracted = refracted_color(world, comps, recursive_depth)
 
-    ExRay.add(surface, reflected)
+    ExRay.add(surface, reflected) |> ExRay.add(refracted)
   end
 
-  def color_at(%__MODULE__{} = world, %Ray{} = ray, recursive_depth \\ 4) do
+  def color_at(%__MODULE__{} = world, %Ray{} = ray, recursive_depth \\ 5) do
     xs = intersect(world, ray)
 
     case Intersections.hit(xs) do
@@ -52,7 +53,7 @@ defmodule ExRay.World do
         ExRay.black()
 
       intersection ->
-        comps = Computations.new(intersection, ray)
+        comps = Computations.new(intersection, ray, xs)
         shade_hit(world, comps, recursive_depth)
     end
   end
@@ -70,7 +71,7 @@ defmodule ExRay.World do
     hit && hit.t < distance
   end
 
-  def reflected_color(world, computations, recursive_depth \\ 4)
+  def reflected_color(world, computations, recursive_depth \\ 5)
   def reflected_color(%__MODULE__{}, %Computations{}, 0), do: ExRay.black()
 
   def reflected_color(
@@ -91,7 +92,65 @@ defmodule ExRay.World do
     end
   end
 
+  def refracted_color(world, computations, recursive_depth \\ 5)
+  def refracted_color(%__MODULE__{}, %Computations{}, 0), do: ExRay.black()
+
+  def refracted_color(
+        %__MODULE__{} = world,
+        %Computations{object: object} = comps,
+        recursive_depth
+      ) do
+    if object.material.transparency == 0 do
+      ExRay.black()
+    else
+      n_ratio = comps.n1 / comps.n2
+      cos_i = ExRay.dot(comps.eyev, comps.normalv)
+      sin2_t = n_ratio * n_ratio * (1 - cos_i * cos_i)
+
+      if sin2_t > 1 do
+        ExRay.black()
+      else
+        cos_t = :math.sqrt(1 - sin2_t)
+
+        direction =
+          ExRay.subtract(
+            ExRay.multiply(comps.normalv, n_ratio * cos_i - cos_t),
+            ExRay.multiply(comps.eyev, n_ratio)
+          )
+
+        refract_ray = ExRay.ray(comps.under_point, direction)
+
+        color =
+          ExRay.multiply(
+            color_at(world, refract_ray, recursive_depth - 1),
+            object.material.transparency
+          )
+
+        if Agent.get(Debugger, fn s -> s end) == true do
+          IO.puts("============== Recursive depth: #{recursive_depth}")
+          IO.puts("object: #{object.id}")
+          IO.puts("n1: #{comps.n1}")
+          IO.puts("n2: #{comps.n2}")
+          IO.puts("eyev: #{inspect(comps.eyev)}")
+          IO.puts("normalv: #{inspect(comps.normalv)}")
+          IO.puts("under_point: #{inspect(comps.under_point)}")
+          IO.puts("n_ratio: #{n_ratio}")
+          IO.puts("cos_i: #{cos_i}")
+          IO.puts("sin2_t: #{sin2_t}")
+          IO.puts("cos_t: #{cos_t}")
+          IO.puts("refract_ray: #{inspect(refract_ray)}")
+          IO.puts("refract_color: #{inspect(color)}")
+          IO.puts("")
+          IO.puts("")
+        end
+
+        color
+      end
+    end
+  end
+
   def render(%__MODULE__{} = world, %Camera{} = camera) do
+    Agent.start(fn -> false end, name: Debugger)
     canvas = Canvas.new(camera.hsize, camera.vsize)
 
     coords =
@@ -112,13 +171,19 @@ defmodule ExRay.World do
       Enum.reduce(coords, {canvas, 0}, fn {x, y}, {canvas, ct} ->
         done = round(ct * ratio)
 
-        if Mix.env() != :test do
-          IO.write(
-            "\r|" <>
-              String.duplicate("=", done) <>
-              String.duplicate(" ", size - done) <> "|\t#{round(ct * ratio * (100 / size))}%"
-          )
+        if x == 125 and y == 125 do
+          Agent.update(Debugger, fn _ -> true end)
+        else
+          Agent.update(Debugger, fn _ -> false end)
         end
+
+        # if Mix.env() != :test do
+        #   IO.write(
+        #     "\r|" <>
+        #       String.duplicate("=", done) <>
+        #       String.duplicate(" ", size - done) <> "|\t#{round(ct * ratio * (100 / size))}%"
+        #   )
+        # end
 
         ray = Camera.ray_for_pixel(camera, x, y)
         color = color_at(world, ray)

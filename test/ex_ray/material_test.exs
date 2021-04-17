@@ -14,6 +14,8 @@ defmodule ExRay.MaterialTest do
       assert m.specular == 0.9
       assert m.shininess == 200.0
       assert m.reflective == 0.0
+      assert m.transparency == 0.0
+      assert m.refractive_index == 1.0
     end
   end
 
@@ -26,6 +28,15 @@ defmodule ExRay.MaterialTest do
       assert m.diffuse == 0.5
       assert m.specular == 0.9
       assert m.shininess == 200.0
+    end
+  end
+
+  describe "glass/1" do
+    test "creates a transparent material with a refractive index of glass" do
+      g = Material.glass()
+
+      assert g.transparency == 1.0
+      assert g.refractive_index == 1.52
     end
   end
 

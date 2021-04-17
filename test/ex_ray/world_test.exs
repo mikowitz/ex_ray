@@ -96,6 +96,40 @@ defmodule ExRay.WordTest do
 
       assert World.shade_hit(world, comps) == color(0.87677, 0.92436, 0.82918)
     end
+
+    test "with a transparent material", %{world: world} do
+      floor =
+        Plane.new()
+        |> Plane.set_material(
+          Material.new(
+            transparency: 0.5,
+            refractive_index: 1.5
+          )
+        )
+        |> Plane.set_transform(Transformation.translation(0, -1, 0))
+
+      ball =
+        Sphere.new()
+        |> Sphere.set_material(
+          Material.new(
+            color: color(1, 0, 0),
+            ambient: 0.5
+          )
+        )
+        |> Sphere.set_transform(Transformation.translation(0, -3.5, -0.5))
+
+      world = World.add_objects(world, [floor, ball])
+
+      ray = ray(point(0, 0, -3), vector(0, -@root2 / 2, @root2 / 2))
+
+      [i] =
+        xs = [
+          Intersection.new(@root2, floor)
+        ]
+
+      comps = Computations.new(i, ray, xs)
+      assert World.shade_hit(world, comps) == color(0.93642, 0.68642, 0.68642)
+    end
   end
 
   describe "color_at/2" do
@@ -244,6 +278,96 @@ defmodule ExRay.WordTest do
       comps = Computations.new(i, ray)
 
       assert World.reflected_color(world, comps, 0) == black()
+    end
+  end
+
+  describe "refracted_color/2" do
+    setup :with_default_world
+
+    test "with an opaque surface", %{world: world} do
+      [s1, _] = world.objects
+
+      ray = ray(point(0, 0, -5), vector(0, 0, 1))
+
+      [i, _] =
+        xs = [
+          Intersection.new(4, s1),
+          Intersection.new(6, s1)
+        ]
+
+      comps = Computations.new(i, ray, xs)
+
+      assert World.refracted_color(world, comps) == black()
+    end
+
+    test "at maximum recursive depth", %{world: world} do
+      [s1, s2] = world.objects
+      s1 = Sphere.set_material(s1, Material.new(transparency: 1, refractive_index: 1.5))
+
+      world = %{world | objects: [s1, s2]}
+
+      ray = ray(point(0, 0, -5), vector(0, 0, 1))
+
+      [i, _] =
+        xs = [
+          Intersection.new(4, s1),
+          Intersection.new(6, s1)
+        ]
+
+      comps = Computations.new(i, ray, xs)
+
+      assert World.refracted_color(world, comps, 0) == black()
+    end
+
+    test "under total internal reflection", %{world: world} do
+      [s1, s2] = world.objects
+      s1 = Sphere.set_material(s1, Material.new(transparency: 1, refractive_index: 1.5))
+
+      world = %{world | objects: [s1, s2]}
+
+      ray = ray(point(0, 0, @root2 / 2), vector(0, 1, 0))
+
+      [_, i] =
+        xs = [
+          Intersection.new(-@root2 / 2, s1),
+          Intersection.new(@root2 / 2, s1)
+        ]
+
+      comps = Computations.new(i, ray, xs)
+
+      assert World.refracted_color(world, comps) == black()
+    end
+
+    test "with a refracted ray", %{world: world} do
+      [s1, s2] = world.objects
+
+      s1 =
+        Sphere.set_material(
+          s1,
+          Material.new(ambient: 1, pattern: ExRay.Test.TestPattern.new([white(), black()]))
+        )
+
+      s2 =
+        Sphere.set_material(
+          s2,
+          Material.new(transparency: 1, refractive_index: 1.5)
+        )
+
+      world = %{world | objects: [s1, s2]}
+
+      ray = ray(point(0, 0, 0.1), vector(0, 1, 0))
+
+      [_, _, i, _] =
+        xs = [
+          Intersection.new(-0.9899, s1),
+          Intersection.new(-0.4899, s2),
+          Intersection.new(0.4899, s2),
+          Intersection.new(0.9899, s1)
+        ]
+
+      comps = Computations.new(i, ray, xs)
+
+      assert World.refracted_color(world, comps) == color(0, 0.99888, 0.04725)
     end
   end
 
