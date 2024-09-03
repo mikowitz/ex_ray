@@ -8,10 +8,17 @@ defmodule ExRay do
         %Camera{c | aspect_ratio: 16 / 9, image_width: 400, samples_per_pixel: 100, max_depth: 50}
       end)
 
+    ground_mat = ExRay.Material.Lambertian.new(color(0.8, 0.8, 0.0))
+    center_mat = ExRay.Material.Lambertian.new(color(0.1, 0.2, 0.5))
+    left_mat = ExRay.Material.Metal.new(color(0.8, 0.8, 0.8), 0.3)
+    right_mat = ExRay.Material.Metal.new(color(0.8, 0.6, 0.2), 1)
+
     world =
       World.new()
-      |> World.add(Sphere.new(point(0, 0, -1), 0.5))
-      |> World.add(Sphere.new(point(0, -100.5, -1), 100))
+      |> World.add(Sphere.new(point(0, -100.5, -1), 100, ground_mat))
+      |> World.add(Sphere.new(point(0, 0, -1.2), 0.5, center_mat))
+      |> World.add(Sphere.new(point(-1, 0, -1), 0.5, left_mat))
+      |> World.add(Sphere.new(point(1, 0, -1), 0.5, right_mat))
 
     Camera.render(camera, world)
   end

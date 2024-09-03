@@ -1,6 +1,6 @@
 defmodule ExRay.HitRecord do
   alias ExRay.Vec
-  defstruct [:point, :normal, :t, :front_face]
+  defstruct [:point, :normal, :t, :front_face, :material]
 
   def new(point, normal, t) do
     %__MODULE__{point: point, normal: normal, t: t}

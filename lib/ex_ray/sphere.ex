@@ -1,16 +1,20 @@
 defmodule ExRay.Sphere do
   alias ExRay.{HitRecord, Ray, Vec}
 
-  defstruct [:center, :radius]
+  defstruct [:center, :radius, :material]
 
-  def new(center, radius) do
-    %__MODULE__{center: center, radius: radius}
+  def new(center, radius, material) do
+    %__MODULE__{center: center, radius: radius, material: material}
   end
 
   defimpl ExRay.Hittable do
     alias ExRay.Interval
 
-    def hit(%@for{center: center, radius: radius}, ray, %Interval{} = interval) do
+    def hit(
+          %@for{center: center, radius: radius, material: material},
+          ray,
+          %Interval{} = interval
+        ) do
       oc = Vec.sub(center, ray.origin)
       a = ray.direction |> Vec.length_squared()
       h = Vec.dot(ray.direction, oc)
@@ -33,7 +37,8 @@ defmodule ExRay.Sphere do
           %HitRecord{
             t: root,
             point: point,
-            normal: normal
+            normal: normal,
+            material: material
           }
           |> HitRecord.set_front_face(ray, normal)
         else

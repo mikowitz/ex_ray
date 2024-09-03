@@ -1,5 +1,5 @@
 defmodule ExRay.Camera do
-  alias ExRay.{Color, HitRecord, Interval, Ray, Vec}
+  alias ExRay.{Color, HitRecord, Interval, Vec}
 
   defstruct [
     :image_height,
@@ -83,8 +83,8 @@ defmodule ExRay.Camera do
     else
       case ExRay.Hittable.hit(world, ray, Interval.new(0.001, 1.0e100)) do
         %HitRecord{} = hr ->
-          direction = Vec.add(hr.normal, Vec.random_unit_vector())
-          Color.mul(ray_color(Ray.new(hr.point, direction), depth - 1, world), 0.5)
+          scatter = ExRay.Material.scatter(hr.material, ray, hr)
+          Color.mul(ray_color(scatter.ray, depth - 1, world), scatter.attenuation)
 
         nil ->
           {_ux, uy, _uz} = Vec.unit_vector(ray.direction)

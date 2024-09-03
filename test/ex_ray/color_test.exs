@@ -35,6 +35,20 @@ defmodule ExRay.ColorTest do
 
       assert Color.mul(c, 2) == {1, 0.4, 0.2}
     end
+
+    test "returns the product of two colors" do
+      c = Color.new(0.5, 0.2, 0.1)
+      d = Color.new(0.5, 1, 0.5)
+
+      assert Color.mul(c, d) == {0.25, 0.2, 0.05}
+    end
+
+    test "multiplication is commutative" do
+      c = Color.new(0.5, 0.2, 0.1)
+      d = Color.new(0.5, 1, 0.5)
+
+      assert Color.mul(c, d) == Color.mul(d, c)
+    end
   end
 
   describe "Color.to_ppm/1" do
