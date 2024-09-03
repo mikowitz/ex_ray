@@ -48,4 +48,24 @@ defmodule ExRay.IntervalTest do
       refute Interval.surrounds?(i, 9.0001)
     end
   end
+
+  describe "Interval.clamp/2" do
+    test "clamps a value below the interval to its minimum value" do
+      i = Interval.new(1, 10)
+      assert Interval.clamp(i, 0.9999) == 1
+    end
+
+    test "clamps a value above the interval to its maximum value" do
+      i = Interval.new(1, 10)
+      assert Interval.clamp(i, 10.0001) == 10
+    end
+
+    test "does not change a value inside the interval (inclusive)" do
+      i = Interval.new(1, 10)
+
+      for x <- [1, 10, 4.5, :math.sqrt(80)] do
+        assert Interval.clamp(i, x) == x
+      end
+    end
+  end
 end

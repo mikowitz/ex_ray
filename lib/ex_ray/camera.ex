@@ -7,8 +7,10 @@ defmodule ExRay.Camera do
     :pixel00_loc,
     :pixel_delta_u,
     :pixel_delta_v,
+    :pixels_sample_scale,
     aspect_ratio: 1,
-    image_width: 100
+    image_width: 100,
+    samples_per_pixel: 10
   ]
 
   def new, do: %__MODULE__{}
@@ -17,27 +19,20 @@ defmodule ExRay.Camera do
     %__MODULE__{
       image_width: image_width,
       image_height: image_height,
-      pixel00_loc: pixel00_loc,
-      pixel_delta_u: pixel_delta_u,
-      pixel_delta_v: pixel_delta_v,
-      center: center
-    } = initialize(camera)
+      samples_per_pixel: samples_per_pixel
+    } = camera = initialize(camera)
 
     File.open("test.ppm", [:write], fn file ->
       IO.puts(file, "P3\n#{image_width} #{image_height}\n255")
 
       for y <- 0..(image_height - 1) do
         for x <- 0..(image_width - 1) do
-          pixel_center =
-            pixel00_loc
-            |> Vec.add(Vec.mul(pixel_delta_u, x))
-            |> Vec.add(Vec.mul(pixel_delta_v, y))
-
-          ray_direction = Vec.sub(pixel_center, center)
-
-          ray = ExRay.ray(center, ray_direction)
-
-          color = ray_color(ray, world)
+          color =
+            Enum.reduce(1..samples_per_pixel, Color.black(), fn _, c ->
+              ray = get_ray(camera, x, y)
+              Color.add(c, ray_color(ray, world))
+            end)
+            |> Color.mul(camera.pixels_sample_scale)
 
           IO.puts(file, Color.to_ppm(color))
         end
@@ -76,7 +71,8 @@ defmodule ExRay.Camera do
         center: camera_center,
         pixel00_loc: pixel00_loc,
         pixel_delta_u: pixel_delta_u,
-        pixel_delta_v: pixel_delta_v
+        pixel_delta_v: pixel_delta_v,
+        pixels_sample_scale: 1 / camera.samples_per_pixel
     }
   end
 
@@ -93,5 +89,22 @@ defmodule ExRay.Camera do
       %HitRecord{} = hr ->
         Vec.add(hr.normal, Color.white()) |> Vec.mul(0.5)
     end
+  end
+
+  defp get_ray(%__MODULE__{} = camera, x, y) do
+    {rx, ry, _} = sample_square()
+
+    pixel_sample =
+      camera.pixel00_loc
+      |> Vec.add(Vec.mul(camera.pixel_delta_u, x + rx))
+      |> Vec.add(Vec.mul(camera.pixel_delta_v, y + ry))
+
+    ray_origin = camera.center
+    ray_direction = Vec.sub(pixel_sample, ray_origin)
+    ExRay.ray(ray_origin, ray_direction)
+  end
+
+  defp sample_square do
+    ExRay.vector(:rand.uniform() - 0.5, :rand.uniform() - 0.5, 0)
   end
 end
