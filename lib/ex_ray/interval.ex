@@ -10,4 +10,8 @@ defmodule ExRay.Interval do
   def surrounds?(%__MODULE__{min: min, max: max}, t) do
     min < t && t < max
   end
+
+  def clamp(%__MODULE__{min: min}, t) when t < min, do: min
+  def clamp(%__MODULE__{max: max}, t) when t > max, do: max
+  def clamp(%__MODULE__{}, t), do: t
 end
