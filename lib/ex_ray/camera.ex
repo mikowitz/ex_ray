@@ -1,5 +1,5 @@
 defmodule ExRay.Camera do
-  alias ExRay.{Color, HitRecord, Interval, Vec}
+  alias ExRay.{Color, HitRecord, Interval, Utils, Vec}
 
   defstruct [
     :image_height,
@@ -11,7 +11,11 @@ defmodule ExRay.Camera do
     aspect_ratio: 1,
     image_width: 100,
     samples_per_pixel: 10,
-    max_depth: 10
+    max_depth: 10,
+    vfov: 90,
+    lookfrom: Vec.new(0, 0, 0),
+    lookat: Vec.new(0, 0, -1),
+    vup: Vec.new(0, 1, 0)
   ]
 
   def new, do: %__MODULE__{}
@@ -46,19 +50,27 @@ defmodule ExRay.Camera do
   defp initialize(%__MODULE__{image_width: image_width, aspect_ratio: aspect_ratio} = camera) do
     image_height = max(round(image_width / aspect_ratio), 1)
 
-    focal_length = 1
-    viewport_height = 2
-    viewpoint_width = viewport_height * (image_width / image_height)
-    camera_center = ExRay.point(0, 0, 0)
+    camera_center = camera.lookfrom
 
-    viewport_u = ExRay.vector(viewpoint_width, 0, 0)
-    viewport_v = ExRay.vector(0, -viewport_height, 0)
+    focal_length = Vec.sub(camera.lookfrom, camera.lookat) |> Vec.length()
+    theta = Utils.degrees_to_radians(camera.vfov)
+    h = :math.tan(theta / 2)
+    viewport_height = 2 * h * focal_length
+    viewport_width = viewport_height * (image_width / image_height)
+
+    w = Vec.sub(camera.lookfrom, camera.lookat) |> Vec.unit_vector()
+    u = Vec.cross(camera.vup, w) |> Vec.unit_vector()
+    v = Vec.cross(w, u)
+
+    viewport_u = Vec.mul(u, viewport_width)
+    viewport_v = Vec.mul(Vec.negate(v), viewport_height)
 
     pixel_delta_u = Vec.div(viewport_u, image_width)
     pixel_delta_v = Vec.div(viewport_v, image_height)
 
     viewport_upper_left =
-      Vec.sub(camera_center, ExRay.vector(0, 0, focal_length))
+      camera_center
+      |> Vec.sub(Vec.mul(w, focal_length))
       |> Vec.sub(Vec.div(viewport_u, 2))
       |> Vec.sub(Vec.div(viewport_v, 2))
 
