@@ -1,4 +1,8 @@
 defmodule ExRay do
+  alias ExRay.Interval
+  alias ExRay.Sphere
+  alias ExRay.World
+  alias ExRay.HitRecord
   alias ExRay.{Color, Ray, Vec}
 
   def generate do
@@ -27,6 +31,11 @@ defmodule ExRay do
       viewport_upper_left
       |> Vec.add(Vec.mul(Vec.add(pixel_delta_u, pixel_delta_v), 0.5))
 
+    world =
+      World.new()
+      |> World.add(Sphere.new(point(0, 0, -1), 0.5))
+      |> World.add(Sphere.new(point(0, -100.5, -1), 100))
+
     File.open("test.ppm", [:write], fn file ->
       IO.puts(file, "P3\n#{image_width} #{image_height}\n255")
 
@@ -41,15 +50,9 @@ defmodule ExRay do
 
           ray = ray(camera_center, ray_direction)
 
-          color = ray_color(ray)
+          color = ray_color(ray, world)
 
           IO.puts(file, Color.to_ppm(color))
-
-          ProgressBar.render(
-            y * image_width + x,
-            image_width * image_height,
-            progress_bar_format()
-          )
         end
       end
     end)
@@ -57,28 +60,18 @@ defmodule ExRay do
     IO.puts("")
   end
 
-  defp hit_sphere(center, radius, ray) do
-    oc = Vec.sub(center, ray.origin)
-    a = Vec.dot(ray.direction, ray.direction)
-    b = -2.0 * Vec.dot(ray.direction, oc)
-    c = Vec.dot(oc, oc) - radius * radius
-    discriminant = b * b - 4 * a * c
-
-    discriminant >= 0
-  end
-
-  defp ray_color(ray) do
-    case hit_sphere(point(0, 0, -1), 0.5, ray) do
-      true ->
-        color(1, 0, 0)
-
-      false ->
+  defp ray_color(ray, world) do
+    case ExRay.Hittable.hit(world, ray, Interval.new(0, 1.0e100)) do
+      nil ->
         {_ux, uy, _uz} = Vec.unit_vector(ray.direction)
         a = 0.5 * (uy + 1.0)
 
         Color.white()
         |> Color.mul(1.0 - a)
         |> Color.add(Color.mul(color(0.5, 0.7, 1.0), a))
+
+      %HitRecord{} = hr ->
+        Vec.add(hr.normal, Color.white()) |> Vec.mul(0.5)
     end
   end
 
@@ -86,16 +79,4 @@ defmodule ExRay do
   def vector(x, y, z), do: Vec.new(x, y, z)
   def color(r, g, b), do: Color.new(r, g, b)
   def ray(o, d), do: Ray.new(o, d)
-
-  defp progress_bar_format do
-    [
-      bar_color: [IO.ANSI.green_background()],
-      blank_color: [IO.ANSI.red_background()],
-      bar: " ",
-      blank: " ",
-      left: "",
-      right: "",
-      width: 50
-    ]
-  end
 end
