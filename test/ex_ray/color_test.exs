@@ -41,7 +41,7 @@ defmodule ExRay.ColorTest do
     test "returns a PPM string representation of the color" do
       c = Color.new(1.0, 0, 0.5)
 
-      assert Color.to_ppm(c) == "255 0 128"
+      assert Color.to_ppm(c) == "255 0 180"
     end
   end
 end

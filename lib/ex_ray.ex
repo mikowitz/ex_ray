@@ -5,7 +5,7 @@ defmodule ExRay do
     camera =
       Camera.new()
       |> then(fn c ->
-        %Camera{c | aspect_ratio: 16 / 9, image_width: 400, samples_per_pixel: 100}
+        %Camera{c | aspect_ratio: 16 / 9, image_width: 400, samples_per_pixel: 100, max_depth: 50}
       end)
 
     world =
