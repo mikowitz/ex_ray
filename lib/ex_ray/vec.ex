@@ -63,4 +63,12 @@ defmodule ExRay.Vec do
       false -> negate(on_unit_sphere)
     end
   end
+
+  def near_zero?({x, y, z}) do
+    Enum.all?([x, y, z], fn t -> abs(t) < 1.0e-8 end)
+  end
+
+  def reflect(v, n) do
+    sub(v, mul(n, 2 * dot(v, n)))
+  end
 end
