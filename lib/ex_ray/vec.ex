@@ -71,4 +71,11 @@ defmodule ExRay.Vec do
   def reflect(v, n) do
     sub(v, mul(n, 2 * dot(v, n)))
   end
+
+  def refract(v, n, etai_over_etat) do
+    cos_theta = min(dot(negate(v), n), 1.0)
+    r_out_perp = mul(add(v, mul(n, cos_theta)), etai_over_etat)
+    r_out_parallel = mul(n, -:math.sqrt(abs(1 - length_squared(r_out_perp))))
+    add(r_out_perp, r_out_parallel)
+  end
 end
