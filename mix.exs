@@ -21,6 +21,7 @@ defmodule ExRay.MixProject do
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:mix_test_watch, "~> 1.0", only: [:test], runtime: false},
       {:progress_bar, "~> 3.0"}
     ]
   end
