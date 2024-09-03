@@ -57,13 +57,29 @@ defmodule ExRay do
     IO.puts("")
   end
 
-  defp ray_color(ray) do
-    {_ux, uy, _uz} = Vec.unit_vector(ray.direction)
-    a = 0.5 * (uy + 1.0)
+  defp hit_sphere(center, radius, ray) do
+    oc = Vec.sub(center, ray.origin)
+    a = Vec.dot(ray.direction, ray.direction)
+    b = -2.0 * Vec.dot(ray.direction, oc)
+    c = Vec.dot(oc, oc) - radius * radius
+    discriminant = b * b - 4 * a * c
 
-    Color.white()
-    |> Color.mul(1.0 - a)
-    |> Color.add(Color.mul(color(0.5, 0.7, 1.0), a))
+    discriminant >= 0
+  end
+
+  defp ray_color(ray) do
+    case hit_sphere(point(0, 0, -1), 0.5, ray) do
+      true ->
+        color(1, 0, 0)
+
+      false ->
+        {_ux, uy, _uz} = Vec.unit_vector(ray.direction)
+        a = 0.5 * (uy + 1.0)
+
+        Color.white()
+        |> Color.mul(1.0 - a)
+        |> Color.add(Color.mul(color(0.5, 0.7, 1.0), a))
+    end
   end
 
   def point(x, y, z), do: Vec.new(x, y, z)
