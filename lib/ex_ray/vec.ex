@@ -1,6 +1,16 @@
 defmodule ExRay.Vec do
+  alias ExRay.Utils
+
   def new, do: {0.0, 0.0, 0.0}
   def new(x, y, z), do: {x / 1, y / 1, z / 1}
+
+  def random do
+    new(:rand.uniform(), :rand.uniform(), :rand.uniform())
+  end
+
+  def random(min, max) do
+    new(Utils.random(min, max), Utils.random(min, max), Utils.random(min, max))
+  end
 
   def negate({x, y, z}), do: {-x, -y, -z}
 
@@ -32,6 +42,25 @@ defmodule ExRay.Vec do
   def unit_vector({x, y, z} = v) do
     with l <- __MODULE__.length(v) do
       {x / l, y / l, z / l}
+    end
+  end
+
+  def random_unit_vector do
+    p = random(-1, 1)
+    lqs = length_squared(p)
+
+    case 1.0e-160 < lqs && lqs <= 1 do
+      true -> __MODULE__.div(p, :math.sqrt(lqs))
+      false -> random_unit_vector()
+    end
+  end
+
+  def random_on_hemisphere(normal) do
+    on_unit_sphere = random_unit_vector()
+
+    case dot(on_unit_sphere, normal) > 0.0 do
+      true -> on_unit_sphere
+      false -> negate(on_unit_sphere)
     end
   end
 end

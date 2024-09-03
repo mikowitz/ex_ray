@@ -1,5 +1,7 @@
 defmodule ExRay.Color do
-  alias ExRay.Interval
+  alias ExRay.{Interval, Utils}
+
+  @interval Interval.new(0, 1)
 
   def new(r, g, b), do: {r / 1, g / 1, b / 1}
 
@@ -11,11 +13,14 @@ defmodule ExRay.Color do
   def white, do: new(1, 1, 1)
 
   def to_ppm({r, g, b}) do
-    i = Interval.new(0, 1)
-    r = round(255 * Interval.clamp(i, r))
-    g = round(255 * Interval.clamp(i, g))
-    b = round(255 * Interval.clamp(i, b))
+    r = component_value(r)
+    g = component_value(g)
+    b = component_value(b)
 
     "#{r} #{g} #{b}"
+  end
+
+  defp component_value(t) do
+    round(255 * Interval.clamp(@interval, Utils.linear_to_gamma(t)))
   end
 end

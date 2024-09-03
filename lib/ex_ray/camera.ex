@@ -1,5 +1,5 @@
 defmodule ExRay.Camera do
-  alias ExRay.{Color, HitRecord, Interval, Vec}
+  alias ExRay.{Color, HitRecord, Interval, Ray, Vec}
 
   defstruct [
     :image_height,
@@ -10,7 +10,8 @@ defmodule ExRay.Camera do
     :pixels_sample_scale,
     aspect_ratio: 1,
     image_width: 100,
-    samples_per_pixel: 10
+    samples_per_pixel: 10,
+    max_depth: 10
   ]
 
   def new, do: %__MODULE__{}
@@ -30,7 +31,7 @@ defmodule ExRay.Camera do
           color =
             Enum.reduce(1..samples_per_pixel, Color.black(), fn _, c ->
               ray = get_ray(camera, x, y)
-              Color.add(c, ray_color(ray, world))
+              Color.add(c, ray_color(ray, camera.max_depth, world))
             end)
             |> Color.mul(camera.pixels_sample_scale)
 
@@ -76,18 +77,23 @@ defmodule ExRay.Camera do
     }
   end
 
-  defp ray_color(ray, world) do
-    case ExRay.Hittable.hit(world, ray, Interval.new(0, 1.0e100)) do
-      nil ->
-        {_ux, uy, _uz} = Vec.unit_vector(ray.direction)
-        a = 0.5 * (uy + 1.0)
+  defp ray_color(ray, depth, world) do
+    if depth <= 0 do
+      Color.black()
+    else
+      case ExRay.Hittable.hit(world, ray, Interval.new(0.001, 1.0e100)) do
+        %HitRecord{} = hr ->
+          direction = Vec.add(hr.normal, Vec.random_unit_vector())
+          Color.mul(ray_color(Ray.new(hr.point, direction), depth - 1, world), 0.5)
 
-        Color.white()
-        |> Color.mul(1.0 - a)
-        |> Color.add(Color.mul(ExRay.color(0.5, 0.7, 1.0), a))
+        nil ->
+          {_ux, uy, _uz} = Vec.unit_vector(ray.direction)
+          a = 0.5 * (uy + 1.0)
 
-      %HitRecord{} = hr ->
-        Vec.add(hr.normal, Color.white()) |> Vec.mul(0.5)
+          Color.white()
+          |> Color.mul(1.0 - a)
+          |> Color.add(Color.mul(ExRay.color(0.5, 0.7, 1.0), a))
+      end
     end
   end
 
