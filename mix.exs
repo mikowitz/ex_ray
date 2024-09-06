@@ -15,13 +15,14 @@ defmodule ExRay.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger]
+      extra_applications: [:logger, :observer, :wx, :runtime_tools]
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
+      {:benchee, "~> 1.0", only: :dev},
       {:mix_test_watch, "~> 1.0", only: [:test], runtime: false},
       {:progress_bar, "~> 3.0"}
     ]

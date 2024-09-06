@@ -5,6 +5,14 @@ defmodule ExRay.Color do
 
   def new(r, g, b), do: {r / 1, g / 1, b / 1}
 
+  def random do
+    new(:rand.uniform(), :rand.uniform(), :rand.uniform())
+  end
+
+  def random(min, max) do
+    new(Utils.random(min, max), Utils.random(min, max), Utils.random(min, max))
+  end
+
   def add({r, g, b}, {s, h, c}), do: {r + s, g + h, b + c}
 
   def mul({r, g, b}, {s, h, c}), do: {r * s, g * h, b * c}

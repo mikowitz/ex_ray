@@ -1,5 +1,5 @@
 defmodule ExRay do
-  alias ExRay.{Camera, Color, Ray, Sphere, Vec, World}
+  alias ExRay.{Camera, Color, Ray, Sphere, Utils, Vec, World}
 
   def generate do
     camera =
@@ -8,31 +8,60 @@ defmodule ExRay do
         %Camera{
           c
           | aspect_ratio: 16 / 9,
-            image_width: 400,
-            samples_per_pixel: 100,
+            image_width: 1200,
+            samples_per_pixel: 500,
             max_depth: 50,
             vfov: 20,
-            lookfrom: point(-2, 2, 1),
-            lookat: point(0, 0, -1),
-            vup: vector(0, 1, 0)
+            lookfrom: point(13, 2, 3),
+            lookat: point(0, 0, 0),
+            vup: vector(0, 1, 0),
+            defocus_angle: 0.6,
+            focus_dist: 10.0
         }
       end)
 
-    ground_mat = ExRay.Material.Lambertian.new(color(0.8, 0.8, 0.0))
-    center_mat = ExRay.Material.Lambertian.new(color(0.1, 0.2, 0.5))
-    left_mat = ExRay.Material.Dielectric.new(1.5)
-    bubble_mat = ExRay.Material.Dielectric.new(1 / 1.50)
-    right_mat = ExRay.Material.Metal.new(color(0.8, 0.6, 0.2), 0.3)
+    ground_mat = ExRay.Material.Lambertian.new(color(0.6, 0.6, 0.5))
 
     world =
       World.new()
-      |> World.add(Sphere.new(point(0, -100.5, -1), 100, ground_mat))
-      |> World.add(Sphere.new(point(0, 0, -1.2), 0.5, center_mat))
-      |> World.add(Sphere.new(point(-1, 0, -1), 0.5, left_mat))
-      |> World.add(Sphere.new(point(-1, 0, -1), 0.4, bubble_mat))
-      |> World.add(Sphere.new(point(1, 0, -1), 0.5, right_mat))
+      |> World.add(Sphere.new(point(0, -1000, 0), 1000, ground_mat))
+      |> World.add(Sphere.new(point(0, 1, 0), 1, ExRay.Material.Dielectric.new(1.5)))
+      |> World.add(
+        Sphere.new(point(-4, 1, 0), 1, ExRay.Material.Lambertian.new(color(0.4, 0.2, 0.1)))
+      )
+      |> World.add(
+        Sphere.new(point(4, 1, 0), 1, ExRay.Material.Metal.new(color(0.7, 0.6, 0.5), 0.0))
+      )
 
-    Camera.render(camera, world)
+    coords = for a <- -11..10, b <- -11..10, do: {a, b}
+
+    world =
+      Enum.reduce(coords, world, fn {a, b}, w ->
+        center = point(a + 0.9 * :rand.uniform(), 0.2, b + 0.9 * :rand.uniform())
+
+        if Vec.length(Vec.sub(center, point(4, 0.2, 0))) > 0.9 do
+          material =
+            case :rand.uniform() do
+              n when n < 0.8 ->
+                albedo = Color.random() |> Color.mul(Color.random())
+                ExRay.Material.Lambertian.new(albedo)
+
+              n when n < 0.95 ->
+                albedo = Color.random(0.5, 1)
+                fuzz = Utils.random(0, 0.5)
+                ExRay.Material.Metal.new(albedo, fuzz)
+
+              _ ->
+                ExRay.Material.Dielectric.new(1.5)
+            end
+
+          World.add(w, Sphere.new(center, 0.2, material))
+        else
+          w
+        end
+      end)
+
+    Camera.prender(camera, world)
   end
 
   def point(x, y, z), do: Vec.new(x, y, z)
