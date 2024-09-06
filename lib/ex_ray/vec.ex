@@ -64,6 +64,15 @@ defmodule ExRay.Vec do
     end
   end
 
+  def random_in_unit_disk do
+    p = new(Utils.random(-1, 1), Utils.random(-1, 1), 0)
+
+    case length_squared(p) < 1 do
+      true -> p
+      false -> random_in_unit_disk()
+    end
+  end
+
   def near_zero?({x, y, z}) do
     Enum.all?([x, y, z], fn t -> abs(t) < 1.0e-8 end)
   end
